@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "trimmable_tools:item/stone_hoe",
+    "layer1": "trimmable_tools:trims/items/hoe_trim_quartz"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "trimmable_tools:item/wooden_pickaxe",
+    "layer1": "trimmable_tools:trims/items/pickaxe_trim_netherite"
+  }
+}
