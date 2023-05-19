@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "trimmable_tools:item/wooden_shovel",
+    "layer1": "trimmable_tools:trims/items/shovel_trim_gold"
+  }
+}

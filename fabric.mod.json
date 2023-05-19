@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "trimmable_tools",
+  "version": "1.0.4",
+  "name": "Trimmable Tools",
+  "description": "Trim your swords, axes, pickaxes, shovels, and hoes!",
+  "authors": [
+    "Apollo"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/project/trimmable-tools"
+  },
+  "license": "MIT",
+  "icon": "pack.png",
+  "environment": "*",
+  "depends": {
+    "fabric-resource-loader-v0": "*"
+  }
+}
