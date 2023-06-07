@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "trimmable_tools",
-  "version": "1.1",
+  "version": "1.0.4",
   "name": "Trimmable Tools",
   "description": "Trim your tools with the updated smithing table!",
   "authors": [
