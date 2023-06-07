@@ -15,3 +15,5 @@ The way to trim tools is exactly the same as trimming armor: You'll need to use 
 While the part of the pack that allows you to trim tools is server-side, clients will need to have either the resource pack (attached with the datapack) or the mod installed to see the textures correctly.
 
 If you are using Trimmable Tools on 1.19.4, **the 1.20 built-in datapack MUST be enabled**.
+
+Big thanks to _humanoid who made the textures for this mod!
