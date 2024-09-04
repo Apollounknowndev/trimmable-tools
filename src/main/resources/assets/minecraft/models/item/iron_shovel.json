@@ -1,0 +1,8 @@
+{
+  "trimmable_tools:material": "iron",
+  "trimmable_tools:tool_type": "shovel",
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "minecraft:item/iron_shovel"
+  }
+}

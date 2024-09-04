@@ -1,0 +1,8 @@
+{
+  "trimmable_tools:material": "netherite",
+  "trimmable_tools:tool_type": "sword",
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "minecraft:item/netherite_sword"
+  }
+}
