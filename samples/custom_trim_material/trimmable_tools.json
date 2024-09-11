@@ -1,0 +1,35 @@
+{
+  "patterns": [
+    "minecraft:bolt",
+    "minecraft:coast",
+    "minecraft:dune",
+    "minecraft:eye",
+    "minecraft:flow",
+    "minecraft:host",
+    "minecraft:raiser",
+    "minecraft:rib",
+    "minecraft:sentry",
+    "minecraft:shaper",
+    "minecraft:silence",
+    "minecraft:snout",
+    "minecraft:spire",
+    "minecraft:tide",
+    "minecraft:vex",
+    "minecraft:ward",
+    "minecraft:wayfinder",
+    "minecraft:wild"
+  ],
+  "materials": [
+    "minecraft:amethyst",
+    "minecraft:copper",
+    "minecraft:diamond",
+    "minecraft:emerald",
+    "minecraft:gold",
+    "minecraft:iron",
+    "minecraft:lapis",
+    "minecraft:netherite",
+    "minecraft:quartz",
+    "minecraft:redstone",
+    "biomesoplenty:rose_quartz"
+  ]
+}
