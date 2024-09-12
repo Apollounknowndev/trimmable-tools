@@ -1,0 +1,8 @@
+{
+  "trimmable_tools:material": "diamond",
+  "trimmable_tools:tool_type": "sword",
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "minecraft:item/diamond_sword"
+  }
+}

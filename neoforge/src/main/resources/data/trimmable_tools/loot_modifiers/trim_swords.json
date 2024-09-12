@@ -1,0 +1,10 @@
+{
+  "type": "trimmable_tools:apply_item_modifier",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "minecraft:equipment/trial_chamber_melee"
+    }
+  ],
+  "item_modifier": "trimmable_tools:trial_chambers_equipment"
+}
