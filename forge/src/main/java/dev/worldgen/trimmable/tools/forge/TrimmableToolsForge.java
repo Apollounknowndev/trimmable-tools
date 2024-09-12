@@ -1,6 +1,8 @@
-package dev.worldgen.trimmable.tools;
+package dev.worldgen.trimmable.tools.forge;
 
 
+import dev.worldgen.trimmable.tools.TrimmableTools;
+import dev.worldgen.trimmable.tools.TrimmableToolsClient;
 import dev.worldgen.trimmable.tools.config.ConfigHandler;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;

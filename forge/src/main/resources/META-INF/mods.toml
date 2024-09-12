@@ -1,26 +1,26 @@
 modLoader = "javafml" #mandatory
-loaderVersion = "${forge_loader_version_range}" #mandatory
-license = "${license}"
+loaderVersion = "[47,)" #mandatory
+license = "MIT"
 
 [[mods]] #mandatory
-modId = "${mod_id}" #mandatory
+modId = "trimmable_tools" #mandatory
 version = "${version}" #mandatory
-displayName = "${mod_name}" #mandatory
+displayName = "Trimmable Tools" #mandatory
 logoFile = "pack.png"
 authors = "Apollo, DawnKiro" #optional
-description = '''${description}'''
+description = "Trim your tools!"
 
 
-[[dependencies.${mod_id}]] #optional
+[[dependencies.trimmable_tools]] #optional
 modId = "forge" #mandatory
 mandatory = true #mandatory
-versionRange = "${forge_version_range}" #mandatory
+versionRange = "[47,)" #mandatory
 ordering = "NONE" # The order that this dependency should load in relation to your mod, required to be either 'BEFORE' or 'AFTER' if the dependency is not mandatory
 side = "BOTH" # Side this dependency is applied on - 'BOTH', 'CLIENT' or 'SERVER'
 
-[[dependencies.${mod_id}]]
+[[dependencies.trimmable_tools]]
 modId = "minecraft"
 mandatory = true
-versionRange = "${minecraft_version_range}"
+versionRange = "[1.20.1, 1.20.2)"
 ordering = "NONE"
 side = "BOTH"
