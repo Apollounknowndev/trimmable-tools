@@ -1,8 +1,0 @@
-{
-  "trimmable_tools:material": "netherite",
-  "trimmable_tools:tool_type": "axe",
-  "parent": "minecraft:item/handheld",
-  "textures": {
-    "layer0": "minecraft:item/netherite_axe"
-  }
-}
