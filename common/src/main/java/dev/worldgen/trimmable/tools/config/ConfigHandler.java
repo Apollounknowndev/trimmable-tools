@@ -22,7 +22,7 @@ public class ConfigHandler {
     private static final Path CONFIG_PATH = Services.PLATFORM.getConfigFolder().resolve("trimmable_tools.json");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final TrimDataConfig DEFAULT = TrimDataConfig.create(
-            List.of(BOLT, COAST, DUNE, EYE, FLOW, HOST, RAISER, RIB, SENTRY, SHAPER, SILENCE, SNOUT, SPIRE, TIDE, VEX, WARD, WAYFINDER, WILD),
+            List.of(COAST, DUNE, EYE, HOST, RAISER, RIB, SENTRY, SHAPER, SILENCE, SNOUT, SPIRE, TIDE, VEX, WARD, WAYFINDER, WILD),
             List.of(AMETHYST, COPPER, DIAMOND, EMERALD, GOLD, IRON, LAPIS, NETHERITE, QUARTZ, REDSTONE)
     );
     private static TrimDataConfig config = DEFAULT;
@@ -33,7 +33,7 @@ public class ConfigHandler {
         try {
             JsonElement json = JsonParser.parseString(new String(Files.readAllBytes(CONFIG_PATH)));
             var dataResult = TrimDataConfig.CODEC.parse(JsonOps.INSTANCE, json);
-            dataResult.ifError(error -> {
+            dataResult.error().ifPresent(error -> {
                 TrimmableTools.LOGGER.error("Config file has missing or invalid data: "+error.message());
                 writeDefault();
             });
@@ -58,7 +58,7 @@ public class ConfigHandler {
 
     private static void writeDefault() {
         try(BufferedWriter writer = Files.newBufferedWriter(CONFIG_PATH)) {
-            JsonElement json = TrimDataConfig.CODEC.encodeStart(JsonOps.INSTANCE, DEFAULT).getOrThrow();
+            JsonElement json = TrimDataConfig.CODEC.encodeStart(JsonOps.INSTANCE, DEFAULT).get().orThrow();
             writer.write(GSON.toJson(json));
         } catch (Exception e) {
             TrimmableTools.LOGGER.error("Couldn't write default config to file");

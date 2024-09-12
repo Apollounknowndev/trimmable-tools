@@ -89,12 +89,12 @@ public class TrimmableToolsResourceHelper {
     }
 
     private static ResourceLocation createTrimmedToolId(ResourceLocation id, String pattern, String material) {
-        return ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath().replace(".json", String.format("_%s_%s.json", pattern, material)));
+        return new ResourceLocation(id.getNamespace(), id.getPath().replace(".json", String.format("_%s_%s.json", pattern, material)));
     }
 
     private static String createModelId(ResourceLocation id) {
         String path = id.getPath();
-        return ResourceLocation.fromNamespaceAndPath(id.getNamespace(), path.substring(7, path.length() - 5)).toString();
+        return new ResourceLocation(id.getNamespace(), path.substring(7, path.length() - 5)).toString();
     }
 
     private static Resource createTrimOverrideResource(PackResources pack, String parent, String layer0, String trimType, String pattern, String material) {
