@@ -1,5 +1,6 @@
 plugins {
     id 'com.github.johnrengelman.shadow'
+    id 'me.modmuss50.mod-publish-plugin' version '0.5.1'
 }
 
 loom {
@@ -53,4 +54,28 @@ shadowJar {
 
 remapJar {
     inputFile.set shadowJar.archiveFile
+}
+
+publishMods {
+    file = remapJar.archiveFile
+    changelog = "${update_changelog}"
+    type = STABLE
+    modLoaders.add("forge")
+    displayName = "v%s ~ Forge 1.20".formatted(project.version)
+
+    dryRun = false
+
+    modrinth {
+        accessToken = providers.environmentVariable("TOKEN_MR")
+        projectId = "MJu3fF3K"
+
+        minecraftVersions.add("1.20.1")
+    }
+
+    curseforge {
+        accessToken = providers.environmentVariable("TOKEN_CF")
+        projectId = "834329"
+
+        minecraftVersions.add("1.20.1")
+    }
 }
