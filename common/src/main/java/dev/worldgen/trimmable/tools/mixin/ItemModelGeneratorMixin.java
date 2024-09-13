@@ -81,31 +81,7 @@ public abstract class ItemModelGeneratorMixin {
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/renderer/block/model/BlockElement;<init>(Lorg/joml/Vector3f;Lorg/joml/Vector3f;Ljava/util/Map;Lnet/minecraft/client/renderer/block/model/BlockElementRotation;Z)V",
-            ordinal = 0
-        ), index = 0
-    )
-    private Vector3f trimmableTools$fixLeft1(Vector3f vec3f, @Share("expandElements") LocalBooleanRef expandElements) {
-        return expandElements.get() ? vec3f.add(0.01f, 0, 0) : vec3f;
-    }
-
-    @ModifyArg(
-        method = "createSideElements",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/renderer/block/model/BlockElement;<init>(Lorg/joml/Vector3f;Lorg/joml/Vector3f;Ljava/util/Map;Lnet/minecraft/client/renderer/block/model/BlockElementRotation;Z)V",
-            ordinal = 0
-        ), index = 1
-    )
-    private Vector3f trimmableTools$fixLeft2(Vector3f vec3f, @Share("expandElements") LocalBooleanRef expandElements) {
-        return expandElements.get() ? vec3f.add(0.01f, 0, 0) : vec3f;
-    }
-
-    @ModifyArg(
-        method = "createSideElements",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/renderer/block/model/BlockElement;<init>(Lorg/joml/Vector3f;Lorg/joml/Vector3f;Ljava/util/Map;Lnet/minecraft/client/renderer/block/model/BlockElementRotation;Z)V",
-            ordinal = 1
+            ordinal = 2
         ), index = 0
     )
     private Vector3f trimmableTools$fixRight1(Vector3f vec3f, @Share("expandElements") LocalBooleanRef expandElements) {
@@ -117,10 +93,22 @@ public abstract class ItemModelGeneratorMixin {
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/renderer/block/model/BlockElement;<init>(Lorg/joml/Vector3f;Lorg/joml/Vector3f;Ljava/util/Map;Lnet/minecraft/client/renderer/block/model/BlockElementRotation;Z)V",
-            ordinal = 1
+            ordinal = 2
         ), index = 1
     )
     private Vector3f trimmableTools$fixRight2(Vector3f vec3f, @Share("expandElements") LocalBooleanRef expandElements) {
         return expandElements.get() ? vec3f.add(-0.01f, 0, 0) : vec3f;
+    }
+
+    @ModifyArg(
+        method = "createSideElements",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/renderer/block/model/BlockElement;<init>(Lorg/joml/Vector3f;Lorg/joml/Vector3f;Ljava/util/Map;Lnet/minecraft/client/renderer/block/model/BlockElementRotation;Z)V",
+            ordinal = 3
+        ), index = 0
+    )
+    private Vector3f trimmableTools$fixLeft1(Vector3f vec3f, @Share("expandElements") LocalBooleanRef expandElements) {
+        return expandElements.get() ? vec3f.add(0.01f, 0, 0) : vec3f;
     }
 }
