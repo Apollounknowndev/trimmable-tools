@@ -17,6 +17,7 @@ public class TrimmableToolsFabric implements ClientModInitializer {
         TrimmableToolsClient.init();
 
         ItemProperties.registerGeneric(TrimmableToolsClient.TRIM_PATTERN, (stack, world, entity, seed) -> {
+            if (world == null) return Float.NEGATIVE_INFINITY;
             Optional<ArmorTrim> trim = ArmorTrim.getTrim(world.registryAccess(), stack);
             if (trim.isEmpty()) return Float.NEGATIVE_INFINITY;
 
@@ -25,6 +26,7 @@ public class TrimmableToolsFabric implements ClientModInitializer {
         });
 
         ItemProperties.registerGeneric(TrimmableToolsClient.TRIM_MATERIAL, (stack, world, entity, seed) -> {
+            if (world == null) return Float.NEGATIVE_INFINITY;
             Optional<ArmorTrim> trim = ArmorTrim.getTrim(world.registryAccess(), stack);
             if (trim.isEmpty()) return Float.NEGATIVE_INFINITY;
 
