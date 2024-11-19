@@ -39,6 +39,7 @@ public class TrimmableToolsNeoforge {
             TrimmableToolsClient.init();
 
             ItemProperties.registerGeneric(TrimmableToolsClient.TRIM_PATTERN, (stack, world, entity, seed) -> {
+                if (world == null) return Float.NEGATIVE_INFINITY;
                 ArmorTrim trim = stack.get(DataComponents.TRIM);
                 if (trim == null) return Float.NEGATIVE_INFINITY;
 
@@ -47,6 +48,7 @@ public class TrimmableToolsNeoforge {
             });
 
             ItemProperties.registerGeneric(TrimmableToolsClient.TRIM_MATERIAL, (stack, world, entity, seed) -> {
+                if (world == null) return Float.NEGATIVE_INFINITY;
                 ArmorTrim trim = stack.get(DataComponents.TRIM);
                 if (trim == null) return Float.NEGATIVE_INFINITY;
 
