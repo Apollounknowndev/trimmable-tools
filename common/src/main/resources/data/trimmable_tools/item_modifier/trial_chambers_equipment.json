@@ -1,7 +1,7 @@
 {
   "function": "minecraft:filtered",
   "item_filter": {
-    "items": "#trimmable_tools:trimmable_tools"
+    "items": "#c:tools"
   },
   "modifier": {
     "function": "minecraft:sequence",

@@ -1,5 +1,9 @@
 {
     "values": [
-        "#trimmable_tools:trimmable_tools"
+        "#minecraft:axes",
+        "#minecraft:hoes",
+        "#minecraft:pickaxes",
+        "#minecraft:shovels",
+        "#minecraft:swords"
     ]
 }

@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 import com.mojang.serialization.JsonOps;
 import dev.worldgen.trimmable.tools.TrimmableTools;
 import dev.worldgen.trimmable.tools.platform.Services;
+import dev.worldgen.trimmable.tools.resource.TrimmableToolsResourceHelper;
 import net.minecraft.resources.ResourceLocation;
 
 import java.io.BufferedWriter;
@@ -14,18 +15,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-
-import static net.minecraft.world.item.armortrim.TrimMaterials.*;
-import static net.minecraft.world.item.armortrim.TrimPatterns.*;
+import java.util.Map;
 
 public class ConfigHandler {
     private static final Path CONFIG_PATH = Services.PLATFORM.getConfigFolder().resolve("trimmable_tools.json");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    private static final TrimDataConfig DEFAULT = TrimDataConfig.create(
-            List.of(BOLT, COAST, DUNE, EYE, FLOW, HOST, RAISER, RIB, SENTRY, SHAPER, SILENCE, SNOUT, SPIRE, TIDE, VEX, WARD, WAYFINDER, WILD),
-            List.of(AMETHYST, COPPER, DIAMOND, EMERALD, GOLD, IRON, LAPIS, NETHERITE, QUARTZ, REDSTONE)
-    );
-    private static TrimDataConfig config = DEFAULT;
+    private static TrimDataConfig config = TrimDataConfig.DEFAULT;
+
     public static void load() {
         if (!Files.isRegularFile(CONFIG_PATH)) {
             writeDefault();
@@ -48,20 +44,30 @@ public class ConfigHandler {
         }
     }
 
-    public static List<ResourceLocation> materials() {
-        return config.materials();
+    public static TrimDataConfig config() {
+        return config;
     }
 
-    public static List<ResourceLocation> patterns() {
-        return config.patterns();
+    public static String getDarkerMaterial(ResourceLocation modelId) {
+        ResourceLocation id = TrimmableToolsResourceHelper.stripModelAffixes(modelId);
+        for (Map.Entry<String, List<ResourceLocation>> entry : config.darkerMaterials().entrySet()) {
+            if (entry.getValue().contains(id)) {
+                return entry.getKey();
+            }
+        }
+        return "";
+    }
+
+    public static boolean hasDarkerVariant(String name) {
+        return config.darkerMaterials().keySet().stream().anyMatch(key -> key.equals(name));
     }
 
     private static void writeDefault() {
         try(BufferedWriter writer = Files.newBufferedWriter(CONFIG_PATH)) {
-            JsonElement json = TrimDataConfig.CODEC.encodeStart(JsonOps.INSTANCE, DEFAULT).getOrThrow();
+            JsonElement json = TrimDataConfig.CODEC.encodeStart(JsonOps.INSTANCE, TrimDataConfig.DEFAULT).getOrThrow();
             writer.write(GSON.toJson(json));
         } catch (Exception e) {
-            TrimmableTools.LOGGER.error("Couldn't write default config to file");
+            TrimmableTools.LOGGER.error("Couldn't write default config to file", e);
         }
     }
 }

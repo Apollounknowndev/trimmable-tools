@@ -7,6 +7,8 @@ import com.google.gson.JsonSyntaxException;
 import dev.worldgen.trimmable.tools.TrimmableTools;
 import dev.worldgen.trimmable.tools.TrimmableToolsClient;
 import dev.worldgen.trimmable.tools.config.ConfigHandler;
+import dev.worldgen.trimmable.tools.config.ToolTags;
+import dev.worldgen.trimmable.tools.config.TrimData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.resources.IoSupplier;
@@ -23,35 +25,37 @@ import java.util.Objects;
 
 public class TrimmableToolsResourceHelper {
     private static final Gson GSON = new Gson();
-    private static final String TOOL_TYPE_KEY = "trimmable_tools:tool_type";
-    private static final String MATERIAL_KEY = "trimmable_tools:material";
 
-    // TODO: Cleanup code
     public static void addAllTrimOverrides(Map<ResourceLocation, Resource> models) {
         for (Map.Entry<ResourceLocation, Resource> entry : new HashSet<>(models.entrySet())) {
+            ResourceLocation key = entry.getKey();
+
+            if (!ToolTags.EVERYTHING_TRIMMABLE.contains(TrimmableToolsResourceHelper.stripModelAffixes(key))) continue;
+
             try (Reader reader = entry.getValue().openAsReader()) {
                 JsonObject json = GsonHelper.parse(reader);
 
-                if (!isTrimmableTool(json)) continue;
-                String toolType = GsonHelper.getAsString(json, TOOL_TYPE_KEY);
-                String toolMaterial = getToolMaterial(json);
+                ResourceLocation toolType = ToolTags.getToolType(key);
+                if (toolType.equals(ToolTags.UNKNOWN)) continue;
+
+                String toolMaterial = ConfigHandler.getDarkerMaterial(key);
 
                 String parent = getParent(json);
                 String layer0 = getLayer0(json);
                 JsonArray overrides = getOverrides(json);
 
-                List<ResourceLocation> patterns = ConfigHandler.patterns();
+                List<ResourceLocation> patterns = TrimData.PATTERNS;
                 for (int i = 0; i < patterns.size(); i++) {
                     String pattern = patterns.get(i).getPath();
 
-                    List<ResourceLocation> materials = ConfigHandler.materials();
+                    List<ResourceLocation> materials = TrimData.MATERIALS;
                     for (int j = 0; j < materials.size(); j++) {
                         String material = materials.get(j).getPath();
                         if (Objects.equals(material, toolMaterial)) {
                             material = material + "_darker";
                         }
 
-                        ResourceLocation rawModelId = createTrimmedToolId(entry.getKey(), pattern, material);
+                        ResourceLocation rawModelId = createTrimmedToolId(key, pattern, material);
                         models.put(rawModelId, createTrimOverrideResource(entry.getValue().source(), parent, layer0, toolType, pattern, material));
 
                         JsonObject override = new JsonObject();
@@ -71,21 +75,14 @@ public class TrimmableToolsResourceHelper {
             } catch (JsonSyntaxException ignored) {
 
             } catch (Exception e) {
-                TrimmableTools.LOGGER.error("Couldn't load trimmable tool data from model {}", entry.getKey(), e);
+                TrimmableTools.LOGGER.error("Couldn't load trimmable tool data from model {}", key, e);
             }
         }
     }
 
-    private static boolean isTrimmableTool(JsonObject json) {
-        return json.has(TOOL_TYPE_KEY) && GsonHelper.isStringValue(json.get(TOOL_TYPE_KEY));
-    }
-
-    private static String getToolMaterial(JsonObject json) {
-        String toolMaterial = "";
-        if (json.has(MATERIAL_KEY) && GsonHelper.isStringValue(json.get(MATERIAL_KEY))) {
-            toolMaterial = GsonHelper.getAsString(json, MATERIAL_KEY);
-        }
-        return toolMaterial;
+    public static ResourceLocation stripModelAffixes(ResourceLocation id) {
+        String path = id.getPath();
+        return ResourceLocation.fromNamespaceAndPath(id.getNamespace(), path.substring(path.lastIndexOf("/") + 1, path.length() - 5));
     }
 
     private static ResourceLocation createTrimmedToolId(ResourceLocation id, String pattern, String material) {
@@ -97,10 +94,10 @@ public class TrimmableToolsResourceHelper {
         return ResourceLocation.fromNamespaceAndPath(id.getNamespace(), path.substring(7, path.length() - 5)).toString();
     }
 
-    private static Resource createTrimOverrideResource(PackResources pack, String parent, String layer0, String trimType, String pattern, String material) {
+    private static Resource createTrimOverrideResource(PackResources pack, String parent, String layer0, ResourceLocation toolType, String pattern, String material) {
         JsonObject textures = new JsonObject();
         textures.addProperty("layer0", layer0);
-        textures.addProperty("layer1", String.format("trimmable_tools:trims/items/%s/%s_%s", trimType, pattern, material));
+        textures.addProperty("layer1", String.format("%s:trims/items/%s/%s_%s", toolType.getNamespace(), toolType.getPath(), pattern, material));
 
         JsonObject json = new JsonObject();
         json.addProperty("parent", parent);

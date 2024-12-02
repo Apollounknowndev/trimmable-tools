@@ -1,7 +1,0 @@
-{
-  "trimmable_tools:tool_type": "shovel",
-  "parent": "minecraft:item/handheld",
-  "textures": {
-    "layer0": "minecraft:item/wooden_shovel"
-  }
-}

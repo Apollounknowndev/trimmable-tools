@@ -1,10 +1,11 @@
 package dev.worldgen.trimmable.tools;
 
-
 import com.mojang.serialization.MapCodec;
-import dev.worldgen.trimmable.tools.config.ConfigHandler;
+import dev.worldgen.trimmable.tools.config.TrimData;
 import dev.worldgen.trimmable.tools.loot.ApplyItemModifierLootModifier;
+import dev.worldgen.trimmable.tools.resource.TrimPalettedPermutations;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.client.renderer.texture.atlas.SpriteSourceType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.armortrim.ArmorTrim;
@@ -16,6 +17,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.RegisterSpriteSourceTypesEvent;
 import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
@@ -23,6 +25,7 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import java.util.function.Supplier;
 
 @Mod(TrimmableTools.MOD_ID)
+@SuppressWarnings("unused")
 public class TrimmableToolsNeoforge {
     public static final DeferredRegister<MapCodec<? extends IGlobalLootModifier>> LOOT_MODIFIERS = DeferredRegister.create(NeoForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, TrimmableTools.MOD_ID);
     public static final Supplier<MapCodec<ApplyItemModifierLootModifier>> APPLY_ITEM_MODIFIER = LOOT_MODIFIERS.register("apply_item_modifier", () -> ApplyItemModifierLootModifier.CODEC);
@@ -44,7 +47,7 @@ public class TrimmableToolsNeoforge {
                 if (trim == null) return Float.NEGATIVE_INFINITY;
 
                 ResourceLocation id = trim.pattern().unwrapKey().orElse(TrimPatterns.COAST).location();
-                return (ConfigHandler.patterns().indexOf(id) + 1f) / 1000;
+                return (TrimData.PATTERNS.indexOf(id) + 1f) / 1000;
             });
 
             ItemProperties.registerGeneric(TrimmableToolsClient.TRIM_MATERIAL, (stack, world, entity, seed) -> {
@@ -53,8 +56,13 @@ public class TrimmableToolsNeoforge {
                 if (trim == null) return Float.NEGATIVE_INFINITY;
 
                 ResourceLocation id = trim.material().unwrapKey().orElse(TrimMaterials.REDSTONE).location();
-                return (ConfigHandler.materials().indexOf(id) + 1f) / 1000;
+                return (TrimData.MATERIALS.indexOf(id) + 1f) / 1000;
             });
+        }
+
+        @SubscribeEvent
+        public static void registerAtlasSource(RegisterSpriteSourceTypesEvent event) {
+            event.register(TrimmableTools.id("paletted_permutations"), new SpriteSourceType(TrimPalettedPermutations.CODEC));
         }
     }
 }

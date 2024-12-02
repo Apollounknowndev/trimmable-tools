@@ -1,13 +1,13 @@
 package dev.worldgen.trimmable.tools;
 
-import dev.worldgen.trimmable.tools.config.ConfigHandler;
+import dev.worldgen.trimmable.tools.config.TrimData;
+import dev.worldgen.trimmable.tools.mixin.SpriteSourcesAccessor;
+import dev.worldgen.trimmable.tools.resource.TrimPalettedPermutations;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
-import net.fabricmc.fabric.api.object.builder.v1.client.model.FabricModelPredicateProviderRegistry;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.core.component.DataComponentType;
+import net.minecraft.client.renderer.texture.atlas.SpriteSourceType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -34,21 +34,24 @@ public class TrimmableToolsFabric implements ModInitializer, ClientModInitialize
     @Override
     public void onInitializeClient() {
         TrimmableToolsClient.init();
+        SpriteSourcesAccessor.getRegistry().put(TrimmableTools.id("paletted_permutations"), new SpriteSourceType(TrimPalettedPermutations.CODEC));
 
         ItemProperties.registerGeneric(TrimmableToolsClient.TRIM_PATTERN, (stack, world, entity, seed) -> {
+            if (world == null) return Float.NEGATIVE_INFINITY;
             ArmorTrim trim = stack.get(DataComponents.TRIM);
             if (trim == null) return Float.NEGATIVE_INFINITY;
 
             ResourceLocation id = trim.pattern().unwrapKey().orElse(TrimPatterns.COAST).location();
-            return (ConfigHandler.patterns().indexOf(id) + 1f) / 1000;
+            return (TrimData.PATTERNS.indexOf(id) + 1f) / 1000;
         });
 
         ItemProperties.registerGeneric(TrimmableToolsClient.TRIM_MATERIAL, (stack, world, entity, seed) -> {
+            if (world == null) return Float.NEGATIVE_INFINITY;
             ArmorTrim trim = stack.get(DataComponents.TRIM);
             if (trim == null) return Float.NEGATIVE_INFINITY;
 
             ResourceLocation id = trim.material().unwrapKey().orElse(TrimMaterials.REDSTONE).location();
-            return (ConfigHandler.materials().indexOf(id) + 1f) / 1000;
+            return (TrimData.MATERIALS.indexOf(id) + 1f) / 1000;
         });
     }
 }

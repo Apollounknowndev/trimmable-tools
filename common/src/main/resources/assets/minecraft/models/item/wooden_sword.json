@@ -1,7 +1,0 @@
-{
-  "trimmable_tools:tool_type": "sword",
-  "parent": "minecraft:item/handheld",
-  "textures": {
-    "layer0": "minecraft:item/wooden_sword"
-  }
-}
