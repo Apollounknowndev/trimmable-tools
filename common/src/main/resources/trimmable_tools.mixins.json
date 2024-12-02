@@ -10,6 +10,7 @@
   },
   "client": [
     "FileToIdConverterMixin",
-    "ItemModelGeneratorMixin"
+    "ItemModelGeneratorMixin",
+    "SpriteSourcesAccessor"
   ]
 }

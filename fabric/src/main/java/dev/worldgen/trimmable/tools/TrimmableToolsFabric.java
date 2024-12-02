@@ -1,8 +1,11 @@
 package dev.worldgen.trimmable.tools;
 
-import dev.worldgen.trimmable.tools.config.ConfigHandler;
+import dev.worldgen.trimmable.tools.config.TrimData;
+import dev.worldgen.trimmable.tools.mixin.SpriteSourcesAccessor;
+import dev.worldgen.trimmable.tools.resource.TrimPalettedPermutations;
 import net.fabricmc.api.ClientModInitializer;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.client.renderer.texture.atlas.SpriteSourceType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.armortrim.ArmorTrim;
 import net.minecraft.world.item.armortrim.TrimMaterials;
@@ -22,7 +25,7 @@ public class TrimmableToolsFabric implements ClientModInitializer {
             if (trim.isEmpty()) return Float.NEGATIVE_INFINITY;
 
             ResourceLocation id = trim.get().pattern().unwrapKey().orElse(TrimPatterns.COAST).location();
-            return (ConfigHandler.patterns().indexOf(id) + 1f) / 1000;
+            return (TrimData.PATTERNS.indexOf(id) + 1f) / 1000;
         });
 
         ItemProperties.registerGeneric(TrimmableToolsClient.TRIM_MATERIAL, (stack, world, entity, seed) -> {
@@ -31,7 +34,7 @@ public class TrimmableToolsFabric implements ClientModInitializer {
             if (trim.isEmpty()) return Float.NEGATIVE_INFINITY;
 
             ResourceLocation id = trim.get().material().unwrapKey().orElse(TrimMaterials.REDSTONE).location();
-            return (ConfigHandler.materials().indexOf(id) + 1f) / 1000;
+            return (TrimData.MATERIALS.indexOf(id) + 1f) / 1000;
         });
     }
 }
