@@ -23,7 +23,7 @@ public abstract class ItemModelGeneratorMixin {
         method = "createSideElements",
         at = @At("HEAD")
     )
-    private void trimmableTools$saveLayer(SpriteContents sprite, String key, int layer, CallbackInfoReturnable<List<BlockElement>> cir, @Share("expandElements") LocalBooleanRef expandElements) {
+    private static void trimmableTools$saveLayer(SpriteContents sprite, String key, int layer, CallbackInfoReturnable<List<BlockElement>> cir, @Share("expandElements") LocalBooleanRef expandElements) {
         expandElements.set(sprite.name().getNamespace().equals(TrimmableTools.MOD_ID));
     }
 
@@ -32,11 +32,11 @@ public abstract class ItemModelGeneratorMixin {
         method = "createSideElements",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/renderer/block/model/BlockElement;<init>(Lorg/joml/Vector3f;Lorg/joml/Vector3f;Ljava/util/Map;)V",
+            target = "Lnet/minecraft/client/renderer/block/model/BlockElement;<init>(Lorg/joml/Vector3fc;Lorg/joml/Vector3fc;Ljava/util/Map;)V",
             ordinal = 0
         )
     )
-    private void trimmableTools$fixUp(Args args, @Share("expandElements") LocalBooleanRef expandElements) {
+    private static void trimmableTools$fixUp(Args args, @Share("expandElements") LocalBooleanRef expandElements) {
         if (!expandElements.get()) return;
 
         Vector3f from = args.get(0);
@@ -53,11 +53,11 @@ public abstract class ItemModelGeneratorMixin {
         method = "createSideElements",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/renderer/block/model/BlockElement;<init>(Lorg/joml/Vector3f;Lorg/joml/Vector3f;Ljava/util/Map;)V",
+            target = "Lnet/minecraft/client/renderer/block/model/BlockElement;<init>(Lorg/joml/Vector3fc;Lorg/joml/Vector3fc;Ljava/util/Map;)V",
             ordinal = 1
         )
     )
-    private void trimmableTools$fixDown(Args args, @Share("expandElements") LocalBooleanRef expandElements) {
+    private static void trimmableTools$fixDown(Args args, @Share("expandElements") LocalBooleanRef expandElements) {
         if (!expandElements.get()) return;
 
         Vector3f from = args.get(0);
@@ -74,11 +74,11 @@ public abstract class ItemModelGeneratorMixin {
         method = "createSideElements",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/renderer/block/model/BlockElement;<init>(Lorg/joml/Vector3f;Lorg/joml/Vector3f;Ljava/util/Map;)V",
+            target = "Lnet/minecraft/client/renderer/block/model/BlockElement;<init>(Lorg/joml/Vector3fc;Lorg/joml/Vector3fc;Ljava/util/Map;)V",
             ordinal = 2
         )
     )
-    private void trimmableTools$fixRight(Args args, @Share("expandElements") LocalBooleanRef expandElements) {
+    private static void trimmableTools$fixRight(Args args, @Share("expandElements") LocalBooleanRef expandElements) {
         if (!expandElements.get()) return;
 
         Vector3f from = args.get(0);
@@ -95,11 +95,11 @@ public abstract class ItemModelGeneratorMixin {
         method = "createSideElements",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/renderer/block/model/BlockElement;<init>(Lorg/joml/Vector3f;Lorg/joml/Vector3f;Ljava/util/Map;)V",
+            target = "Lnet/minecraft/client/renderer/block/model/BlockElement;<init>(Lorg/joml/Vector3fc;Lorg/joml/Vector3fc;Ljava/util/Map;)V",
             ordinal = 3
         )
     )
-    private void trimmableTools$fixLeft(Args args, @Share("expandElements") LocalBooleanRef expandElements) {
+    private static void trimmableTools$fixLeft(Args args, @Share("expandElements") LocalBooleanRef expandElements) {
         if (!expandElements.get()) return;
 
         Vector3f from = args.get(0);

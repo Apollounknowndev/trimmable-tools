@@ -12,8 +12,6 @@ import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.atlas.SpriteResourceLoader;
 import net.minecraft.client.renderer.texture.atlas.SpriteSource;
-import net.minecraft.client.renderer.texture.atlas.SpriteSourceType;
-import net.minecraft.client.renderer.texture.atlas.SpriteSources;
 import net.minecraft.client.renderer.texture.atlas.sources.LazyLoadedImage;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.resources.ResourceLocation;
@@ -76,6 +74,11 @@ public record TrimPalettedPermutations(List<ResourceLocation> textures, Resource
                 }
             }
         }
+    }
+
+    @Override
+    public MapCodec<? extends SpriteSource> codec() {
+        return CODEC;
     }
 
     private static IntUnaryOperator createPaletteMapping(int[] p_266839_, int[] p_266776_) {
@@ -152,10 +155,8 @@ public record TrimPalettedPermutations(List<ResourceLocation> textures, Resource
         }
     }
 
-    @NotNull
-    public SpriteSourceType type() {
-        return SpriteSources.PALETTED_PERMUTATIONS;
-    }
+
+
 
     record PalettedSpriteSupplier(LazyLoadedImage baseImage, Supplier<IntUnaryOperator> palette, ResourceLocation permutationLocation) implements SpriteSource.SpriteSupplier {
 

@@ -5,7 +5,6 @@ import dev.worldgen.trimmable.tools.resource.TrimPalettedPermutations;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
-import net.minecraft.client.renderer.texture.atlas.SpriteSourceType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
@@ -27,6 +26,6 @@ public class TrimmableToolsFabric implements ModInitializer, ClientModInitialize
     @Override
     public void onInitializeClient() {
         TrimmableToolsClient.init();
-        SpriteSourcesAccessor.getRegistry().put(TrimmableTools.id("paletted_permutations"), new SpriteSourceType(TrimPalettedPermutations.CODEC));
+        SpriteSourcesAccessor.getIdMapper().put(TrimmableTools.id("paletted_permutations"), TrimPalettedPermutations.CODEC);
     }
 }
