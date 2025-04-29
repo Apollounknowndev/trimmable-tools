@@ -3,14 +3,13 @@ package dev.worldgen.trimmable.tools;
 import com.mojang.serialization.MapCodec;
 import dev.worldgen.trimmable.tools.loot.ApplyItemModifierLootModifier;
 import dev.worldgen.trimmable.tools.resource.TrimPalettedPermutations;
-import net.minecraft.client.renderer.texture.atlas.SpriteSourceType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.neoforged.neoforge.client.event.RegisterSpriteSourceTypesEvent;
+import net.neoforged.neoforge.client.event.RegisterSpriteSourcesEvent;
 import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
@@ -36,8 +35,8 @@ public class TrimmableToolsNeoforge {
         }
 
         @SubscribeEvent
-        public static void registerAtlasSource(RegisterSpriteSourceTypesEvent event) {
-            event.register(TrimmableTools.id("paletted_permutations"), new SpriteSourceType(TrimPalettedPermutations.CODEC));
+        public static void registerAtlasSource(RegisterSpriteSourcesEvent event) {
+            event.register(TrimmableTools.id("paletted_permutations"), TrimPalettedPermutations.CODEC);
         }
     }
 }

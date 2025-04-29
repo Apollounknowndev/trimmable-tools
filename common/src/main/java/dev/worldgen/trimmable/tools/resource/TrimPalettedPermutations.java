@@ -76,11 +76,6 @@ public record TrimPalettedPermutations(List<ResourceLocation> textures, Resource
         }
     }
 
-    @Override
-    public MapCodec<? extends SpriteSource> codec() {
-        return CODEC;
-    }
-
     private static IntUnaryOperator createPaletteMapping(int[] p_266839_, int[] p_266776_) {
         if (p_266776_.length != p_266839_.length) {
             TrimmableTools.LOGGER.warn("Palette mapping has different sizes: {} and {}", p_266839_.length, p_266776_.length);
@@ -155,8 +150,10 @@ public record TrimPalettedPermutations(List<ResourceLocation> textures, Resource
         }
     }
 
-
-
+    @Override
+    public MapCodec<? extends SpriteSource> codec() {
+        return CODEC;
+    }
 
     record PalettedSpriteSupplier(LazyLoadedImage baseImage, Supplier<IntUnaryOperator> palette, ResourceLocation permutationLocation) implements SpriteSource.SpriteSupplier {
 
