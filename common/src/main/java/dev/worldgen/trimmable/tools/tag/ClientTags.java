@@ -88,14 +88,12 @@ public final class ClientTags {
 
         for (TagEntry tagEntry : tags) {
             tagEntry.build(new TagEntry.Lookup<>() {
-                @Nullable
                 @Override
-                public ResourceLocation element(ResourceLocation id) {
+                public ResourceLocation element(ResourceLocation id, boolean required) {
                     immediateChildIds.add(id);
                     return id;
                 }
 
-                @Nullable
                 @Override
                 public Collection<ResourceLocation> tag(ResourceLocation id) {
                     TagKey<?> tag = TagKey.create(tagKey.registry(), id);

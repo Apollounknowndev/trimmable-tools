@@ -1,100 +1,69 @@
 package dev.worldgen.trimmable.tools.resource;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import dev.worldgen.trimmable.tools.TrimmableTools;
-import dev.worldgen.trimmable.tools.TrimmableToolsClient;
 import dev.worldgen.trimmable.tools.config.ConfigHandler;
 import dev.worldgen.trimmable.tools.config.ToolTags;
 import dev.worldgen.trimmable.tools.config.TrimData;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.client.renderer.item.BlockModelWrapper;
+import net.minecraft.client.renderer.item.ItemModel;
+import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackResources;
-import net.minecraft.server.packs.resources.IoSupplier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.util.GsonHelper;
 import org.apache.commons.io.IOUtils;
 
-import java.io.InputStream;
 import java.io.Reader;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class TrimmableToolsResourceHelper {
     private static final Gson GSON = new Gson();
+    private static final FileToIdConverter MODEL_LISTER = FileToIdConverter.json("models");
 
     public static void addAllTrimOverrides(Map<ResourceLocation, Resource> models) {
         for (Map.Entry<ResourceLocation, Resource> entry : new HashSet<>(models.entrySet())) {
-            ResourceLocation key = entry.getKey();
+            ResourceLocation rawId = entry.getKey();
+            ResourceLocation prefixedId = MODEL_LISTER.fileToId(rawId);
+            ResourceLocation itemId = TrimmableTools.id(prefixedId.getNamespace(), prefixedId.getPath().substring(5));
 
-            if (!ToolTags.EVERYTHING_TRIMMABLE.contains(TrimmableToolsResourceHelper.stripModelAffixes(key))) continue;
+            ResourceLocation toolType = ToolTags.getToolType(itemId);
+            if (toolType.equals(ToolTags.UNKNOWN)) continue;
 
             try (Reader reader = entry.getValue().openAsReader()) {
+
                 JsonObject json = GsonHelper.parse(reader);
+                String parent = GsonHelper.getAsString(json, "parent");
+                JsonObject textures = GsonHelper.getAsJsonObject(json, "textures");
+                String layer0 = GsonHelper.getAsString(textures, "layer0");
 
-                ResourceLocation toolType = ToolTags.getToolType(key);
-                if (toolType.equals(ToolTags.UNKNOWN)) continue;
+                for (String pattern : TrimData.patterns()) {
+                    for (String rawMaterial : TrimData.materials()) {
+                        String material = ConfigHandler.getMaterialName(itemId, rawMaterial);
 
-                String toolMaterial = ConfigHandler.getDarkerMaterial(key);
-
-                String parent = getParent(json);
-                String layer0 = getLayer0(json);
-                JsonArray overrides = getOverrides(json);
-
-                List<ResourceLocation> patterns = TrimData.PATTERNS;
-                for (int i = 0; i < patterns.size(); i++) {
-                    String pattern = patterns.get(i).getPath();
-
-                    List<ResourceLocation> materials = TrimData.MATERIALS;
-                    for (int j = 0; j < materials.size(); j++) {
-                        String material = materials.get(j).getPath();
-                        if (Objects.equals(material, toolMaterial)) {
-                            material = material + "_darker";
-                        }
-
-                        ResourceLocation rawModelId = createTrimmedToolId(key, pattern, material);
-                        models.put(rawModelId, createTrimOverrideResource(entry.getValue().source(), parent, layer0, toolType, pattern, material));
-
-                        JsonObject override = new JsonObject();
-                        override.addProperty("model", createModelId(rawModelId));
-
-                        JsonObject predicate = new JsonObject();
-                        predicate.addProperty(TrimmableToolsClient.TRIM_PATTERN.toString(), (float) (i + 1) / 1000);
-                        predicate.addProperty(TrimmableToolsClient.TRIM_MATERIAL.toString(), (float) (j + 1) / 1000);
-                        override.add("predicate", predicate);
-
-                        overrides.add(override);
+                        ResourceLocation rawModelId = MODEL_LISTER.idToFile(createTrimmedId(prefixedId, pattern, material));
+                        models.put(rawModelId, createTrimModel(entry.getValue().source(), parent, layer0, toolType, pattern, material));
                     }
-
-                    json.add("overrides", overrides);
-                    models.put(entry.getKey(), new Resource(entry.getValue().source(), createSupplier(json)));
                 }
             } catch (JsonSyntaxException ignored) {
 
             } catch (Exception e) {
-                TrimmableTools.LOGGER.error("Couldn't load trimmable tool data from model {}", key, e);
+                TrimmableTools.LOGGER.error("Couldn't load trimmable tool data from model {}", rawId, e);
             }
         }
     }
 
-    public static ResourceLocation stripModelAffixes(ResourceLocation id) {
-        String path = id.getPath();
-        return ResourceLocation.fromNamespaceAndPath(id.getNamespace(), path.substring(path.lastIndexOf("/") + 1, path.length() - 5));
+    private static ResourceLocation createTrimmedId(ResourceLocation id, String pattern, String material) {
+        return id.withSuffix(String.format("_%s_%s", pattern, material));
     }
 
-    private static ResourceLocation createTrimmedToolId(ResourceLocation id, String pattern, String material) {
-        return ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath().replace(".json", String.format("_%s_%s.json", pattern, material)));
-    }
-
-    private static String createModelId(ResourceLocation id) {
-        String path = id.getPath();
-        return ResourceLocation.fromNamespaceAndPath(id.getNamespace(), path.substring(7, path.length() - 5)).toString();
-    }
-
-    private static Resource createTrimOverrideResource(PackResources pack, String parent, String layer0, ResourceLocation toolType, String pattern, String material) {
+    private static Resource createTrimModel(PackResources pack, String parent, String layer0, ResourceLocation toolType, String pattern, String material) {
         JsonObject textures = new JsonObject();
         textures.addProperty("layer0", layer0);
         textures.addProperty("layer1", String.format("%s:trims/items/%s/%s_%s", toolType.getNamespace(), toolType.getPath(), pattern, material));
@@ -103,28 +72,22 @@ public class TrimmableToolsResourceHelper {
         json.addProperty("parent", parent);
         json.add("textures", textures);
 
-        return new Resource(pack, createSupplier(json));
+        return new Resource(pack, () -> IOUtils.toInputStream(GSON.toJson(json), "UTF-8"));
     }
 
-    private static String getParent(JsonObject json) {
-        return GsonHelper.getAsString(json, "parent");
-    }
+    public static TrimmedItemModel.Unbaked createItemModel(ResourceLocation itemId, ItemModel.Unbaked wrapped) {
+        Object2ObjectMap<ClientTrim, ItemModel.Unbaked> cases = new Object2ObjectOpenHashMap<>();
 
-    private static String getLayer0(JsonObject json) {
-        JsonObject textures = GsonHelper.getAsJsonObject(json, "textures");
-        return GsonHelper.getAsString(textures, "layer0");
-    }
-
-
-    private static JsonArray getOverrides(JsonObject json) {
-        try {
-            return GsonHelper.getAsJsonArray(json, "overrides");
-        } catch (Exception e) {
-            return new JsonArray();
+        for (ResourceLocation material : TrimData.MATERIALS) {
+            for (ResourceLocation pattern : TrimData.PATTERNS) {
+                ResourceLocation id = createTrimmedId(itemId.withPrefix("item/"), pattern.getPath(), ConfigHandler.getMaterialName(itemId, material.getPath()));
+                cases.put(new ClientTrim(material, pattern), new BlockModelWrapper.Unbaked(
+                    id,
+                    List.of()
+                ));
+            }
         }
-    }
 
-    private static IoSupplier<InputStream> createSupplier(JsonObject json) {
-        return () -> IOUtils.toInputStream(GSON.toJson(json), "UTF-8");
+        return new TrimmedItemModel.Unbaked(cases, itemId, wrapped);
     }
 }

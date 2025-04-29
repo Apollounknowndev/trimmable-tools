@@ -30,5 +30,8 @@
 	"depends": {
 		"minecraft": ">=1.21",
 		"fabric-api": ">=0.100.5"
+	},
+	"custom": {
+		"trimmable_tools:authors_note": "I hate curseforge. This text is only here so I can upload the damn version."
 	}
 }

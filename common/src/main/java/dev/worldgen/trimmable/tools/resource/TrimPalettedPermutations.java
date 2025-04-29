@@ -2,7 +2,6 @@ package dev.worldgen.trimmable.tools.resource;
 
 import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.worldgen.trimmable.tools.TrimmableTools;
@@ -21,7 +20,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceMetadata;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -88,20 +87,20 @@ public record TrimPalettedPermutations(List<ResourceLocation> textures, Resource
 
             for(int i = 0; i < p_266839_.length; ++i) {
                 int j = p_266839_[i];
-                if (FastColor.ABGR32.alpha(j) != 0) {
-                    int2intmap.put(FastColor.ABGR32.transparent(j), p_266776_[i]);
+                if (ARGB.alpha(j) != 0) {
+                    int2intmap.put(ARGB.transparent(j), p_266776_[i]);
                 }
             }
 
             return (p_267899_) -> {
-                int k = FastColor.ABGR32.alpha(p_267899_);
+                int k = ARGB.alpha(p_267899_);
                 if (k == 0) {
                     return p_267899_;
                 } else {
-                    int l = FastColor.ABGR32.transparent(p_267899_);
-                    int i1 = int2intmap.getOrDefault(l, FastColor.ABGR32.opaque(l));
-                    int j1 = FastColor.ABGR32.alpha(i1);
-                    return FastColor.ABGR32.color(k * j1 / 255, i1);
+                    int l = ARGB.transparent(p_267899_);
+                    int i1 = int2intmap.getOrDefault(l, ARGB.opaque(l));
+                    int j1 = ARGB.alpha(i1);
+                    return ARGB.color(k * j1 / 255, i1);
                 }
             };
         }
@@ -121,7 +120,7 @@ public record TrimPalettedPermutations(List<ResourceLocation> textures, Resource
                     NativeImage nativeimage = NativeImage.read(inputstream);
 
                     try {
-                        pixels = nativeimage.getPixelsRGBA();
+                        pixels = nativeimage.getPixels();
                     } catch (Throwable var10) {
                         try {
                             nativeimage.close();

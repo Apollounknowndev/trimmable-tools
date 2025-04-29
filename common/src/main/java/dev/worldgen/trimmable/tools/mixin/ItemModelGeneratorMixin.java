@@ -32,7 +32,7 @@ public abstract class ItemModelGeneratorMixin {
         method = "createSideElements",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/renderer/block/model/BlockElement;<init>(Lorg/joml/Vector3f;Lorg/joml/Vector3f;Ljava/util/Map;Lnet/minecraft/client/renderer/block/model/BlockElementRotation;Z)V",
+            target = "Lnet/minecraft/client/renderer/block/model/BlockElement;<init>(Lorg/joml/Vector3f;Lorg/joml/Vector3f;Ljava/util/Map;)V",
             ordinal = 0
         )
     )
@@ -53,7 +53,7 @@ public abstract class ItemModelGeneratorMixin {
         method = "createSideElements",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/renderer/block/model/BlockElement;<init>(Lorg/joml/Vector3f;Lorg/joml/Vector3f;Ljava/util/Map;Lnet/minecraft/client/renderer/block/model/BlockElementRotation;Z)V",
+            target = "Lnet/minecraft/client/renderer/block/model/BlockElement;<init>(Lorg/joml/Vector3f;Lorg/joml/Vector3f;Ljava/util/Map;)V",
             ordinal = 1
         )
     )
@@ -74,7 +74,7 @@ public abstract class ItemModelGeneratorMixin {
         method = "createSideElements",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/renderer/block/model/BlockElement;<init>(Lorg/joml/Vector3f;Lorg/joml/Vector3f;Ljava/util/Map;Lnet/minecraft/client/renderer/block/model/BlockElementRotation;Z)V",
+            target = "Lnet/minecraft/client/renderer/block/model/BlockElement;<init>(Lorg/joml/Vector3f;Lorg/joml/Vector3f;Ljava/util/Map;)V",
             ordinal = 2
         )
     )
@@ -95,7 +95,7 @@ public abstract class ItemModelGeneratorMixin {
         method = "createSideElements",
         at = @At(
             value = "INVOKE",
-                target = "Lnet/minecraft/client/renderer/block/model/BlockElement;<init>(Lorg/joml/Vector3f;Lorg/joml/Vector3f;Ljava/util/Map;Lnet/minecraft/client/renderer/block/model/BlockElementRotation;Z)V",
+            target = "Lnet/minecraft/client/renderer/block/model/BlockElement;<init>(Lorg/joml/Vector3f;Lorg/joml/Vector3f;Ljava/util/Map;)V",
             ordinal = 3
         )
     )

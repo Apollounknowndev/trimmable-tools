@@ -9,6 +9,7 @@ import dev.worldgen.trimmable.tools.TrimmableTools;
 import dev.worldgen.trimmable.tools.platform.Services;
 import dev.worldgen.trimmable.tools.resource.TrimmableToolsResourceHelper;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -48,14 +49,9 @@ public class ConfigHandler {
         return config;
     }
 
-    public static String getDarkerMaterial(ResourceLocation modelId) {
-        ResourceLocation id = TrimmableToolsResourceHelper.stripModelAffixes(modelId);
-        for (Map.Entry<String, List<ResourceLocation>> entry : config.darkerMaterials().entrySet()) {
-            if (entry.getValue().contains(id)) {
-                return entry.getKey();
-            }
-        }
-        return "";
+    public static String getMaterialName(ResourceLocation itemId, String material) {
+        List<ResourceLocation> darkerItems = config.darkerMaterials().getOrDefault(material, List.of());
+        return material + (darkerItems.contains(itemId) ? "_darker" : "");
     }
 
     public static boolean hasDarkerVariant(String name) {

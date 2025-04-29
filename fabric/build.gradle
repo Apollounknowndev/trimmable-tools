@@ -42,28 +42,15 @@ publishMods {
     changelog = "${update_changelog}"
     type = STABLE
     modLoaders.add("fabric")
-    displayName = "v%s ~ Fabric 1.21".formatted(project.version)
+    displayName = "v%s ~ Fabric 1.21.4".formatted(project.version)
 
     dryRun = false
-
-    modrinth {
-        accessToken = providers.environmentVariable("TOKEN_MR")
-        projectId = "MJu3fF3K"
-
-        minecraftVersions.add("1.21")
-        minecraftVersions.add("1.21.1")
-
-        requires {
-            slug = "fabric-api"
-        }
-    }
 
     curseforge {
         accessToken = providers.environmentVariable("TOKEN_CF")
         projectId = "834329"
 
-        minecraftVersions.add("1.21")
-        minecraftVersions.add("1.21.1")
+        minecraftVersions.add("1.21.4")
 
         requires("fabric-api")
     }

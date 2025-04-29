@@ -13,7 +13,6 @@ import java.util.stream.Stream;
 
 public class TrimData {
     public static final List<ResourceLocation> MATERIALS = getTrimIds("trim_material");
-
     public static final List<ResourceLocation> PATTERNS = getTrimIds("trim_pattern");
 
     public static List<ResourceLocation> getTrimIds(String folder) {
@@ -42,5 +41,13 @@ public class TrimData {
         }
 
         return ids;
+    }
+
+    public static List<String> materials() {
+        return MATERIALS.stream().map(ResourceLocation::getPath).toList();
+    }
+
+    public static List<String> patterns() {
+        return PATTERNS.stream().map(ResourceLocation::getPath).toList();
     }
 }
