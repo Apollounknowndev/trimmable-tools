@@ -1,0 +1,149 @@
+{
+  "tool_types": {
+    "trimmable_tools:axe": [
+      "minecraft:diamond_axe",
+      "minecraft:stone_axe",
+      "minecraft:golden_axe",
+      "minecraft:netherite_axe",
+      "minecraft:wooden_axe",
+      "minecraft:iron_axe",
+      "minecraft:copper_axe"
+    ],
+    "trimmable_tools:shovel": [
+      "minecraft:diamond_shovel",
+      "minecraft:stone_shovel",
+      "minecraft:golden_shovel",
+      "minecraft:netherite_shovel",
+      "minecraft:wooden_shovel",
+      "minecraft:iron_shovel",
+      "minecraft:copper_shovel"
+    ],
+    "trimmable_tools:hoe": [
+      "minecraft:diamond_hoe",
+      "minecraft:stone_hoe",
+      "minecraft:golden_hoe",
+      "minecraft:netherite_hoe",
+      "minecraft:wooden_hoe",
+      "minecraft:iron_hoe",
+      "minecraft:copper_hoe"
+    ],
+    "trimmable_tools:pickaxe": [
+      "minecraft:diamond_pickaxe",
+      "minecraft:stone_pickaxe",
+      "minecraft:golden_pickaxe",
+      "minecraft:netherite_pickaxe",
+      "minecraft:wooden_pickaxe",
+      "minecraft:iron_pickaxe",
+      "minecraft:copper_pickaxe"
+    ],
+    "trimmable_tools:sword": [
+      "minecraft:diamond_sword",
+      "minecraft:stone_sword",
+      "minecraft:golden_sword",
+      "minecraft:netherite_sword",
+      "minecraft:wooden_sword",
+      "minecraft:iron_sword",
+      "minecraft:copper_sword"
+    ]
+  },
+  "patterns": [
+    "minecraft:bolt",
+    "minecraft:coast",
+    "minecraft:dune",
+    "minecraft:eye",
+    "minecraft:flow",
+    "minecraft:host",
+    "minecraft:raiser",
+    "minecraft:rib",
+    "minecraft:sentry",
+    "minecraft:shaper",
+    "minecraft:silence",
+    "minecraft:snout",
+    "minecraft:spire",
+    "minecraft:tide",
+    "minecraft:vex",
+    "minecraft:ward",
+    "minecraft:wayfinder",
+    "minecraft:wild",
+    {
+      "id": "enderscape:stasis",
+      "required_mod": "enderscape"
+    }
+  ],
+  "materials": [
+    "minecraft:amethyst",
+    {
+      "id": "minecraft:copper",
+      "overrides": {
+        "copper_darker": [
+          "minecraft:copper_sword",
+          "minecraft:copper_pickaxe",
+          "minecraft:copper_axe",
+          "minecraft:copper_shovel",
+          "minecraft:copper_hoe"
+        ]
+      }
+    },
+    {
+      "id": "minecraft:diamond",
+      "overrides": {
+        "diamond_darker": [
+          "minecraft:diamond_sword",
+          "minecraft:diamond_pickaxe",
+          "minecraft:diamond_axe",
+          "minecraft:diamond_shovel",
+          "minecraft:diamond_hoe"
+        ]
+      }
+    },
+    "minecraft:emerald",
+    {
+      "id": "minecraft:gold",
+      "overrides": {
+        "gold_darker": [
+          "minecraft:gold_sword",
+          "minecraft:gold_pickaxe",
+          "minecraft:gold_axe",
+          "minecraft:gold_shovel",
+          "minecraft:gold_hoe"
+        ]
+      }
+    },
+    {
+      "id": "minecraft:iron",
+      "overrides": {
+        "iron_darker": [
+          "minecraft:iron_sword",
+          "minecraft:iron_pickaxe",
+          "minecraft:iron_axe",
+          "minecraft:iron_shovel",
+          "minecraft:iron_hoe"
+        ]
+      }
+    },
+    "minecraft:lapis",
+    {
+      "id": "minecraft:netherite",
+      "overrides": {
+        "netherite_darker": [
+          "minecraft:netherite_sword",
+          "minecraft:netherite_pickaxe",
+          "minecraft:netherite_axe",
+          "minecraft:netherite_shovel",
+          "minecraft:netherite_hoe"
+        ]
+      }
+    },
+    "minecraft:quartz",
+    "minecraft:redstone",
+    "minecraft:resin",
+    {
+      "id": "enderscape:nebulite",
+      "required_mod": "enderscape"
+    },
+    {
+      "id": "enderscape:shadoline",
+      "required_mod": "enderscape"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+	"advancements.adventure.trim_with_any_armor_pattern.description": "Trim a tool or armor piece at a Smithing Table",
+	"item.minecraft.smithing_template.armor_trim.base_slot_description": "Add tool or armor piece",
+	"item.minecraft.smithing_template.armor_trim.applies_to": "Armor & Tools"
+}
