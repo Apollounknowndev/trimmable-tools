@@ -5,15 +5,33 @@ import json
 # Per-mod: Update this for each mod!!!
 
 MOD_ID = "trimmable-tools"
-MOD_VERSION = "2.0.7"
+MOD_VERSION = "2.1.0"
 CHANGELOG = """
-Fixed tool textures completely breaking when used with any mod adding new trim patterns or materials. There's still currently logspam, which will be addressed in a future release.
-"""
+- Added native compatibility with Enderscape. You can now trim your tools with the Stasis pattern and get a texture unique from all vanilla patterns.
+  - You'll find diamond tools with the Stasis trim in End City vaults, if you're lucky!
+- Reduced the number of errors thrown in the log file when unsupported trim patterns exist by ~98%.
+  - The number of errors for an unsupported trim pattern by default is now 5, not 250.
+- Missing trim textures now result in the tool looking as if it has no trim, rather than being the magenta and black error cube.
+- Removed the config file. Defining patterns, materials and tool types the game should generate textures for is now **fully resource-pack driven**.
+  - This means it is now possible for mods to implement compatibility with their custom tool tiers and tool types on their own, without needing the user to modify their Trimmable Tools config file.
+  - A guide on the Github is available [here](https://github.com/Apollounknowndev/trimmable-tools/wiki/Adding-Mod-Compatibility), with a Misode generator for the file on the page."""
 UPLOAD_VERSIONS = [
     #("fabric", "1.21.1"),
     #("neoforge", "1.21.1"),
     ("fabric", "1.21.11"),
-    #("neoforge", "1.21.11"),
+    ("neoforge", "1.21.11"),
+]
+
+DEPENDENCIES = [
+    {
+        "name": "Datapatched",
+
+        "project_id": "7XXwJbHD",
+        "dependency_type": "required",
+
+        "modId": 1366720,
+        "relationType": 3,
+    }
 ]
 
 MODRINTH_ID = "MJu3fF3K"
@@ -56,7 +74,7 @@ def upload_modrinth(loader: str, version: str, file_path: str):
         "changelog": CHANGELOG,
         "version_type": "release",
         "file_parts": ["file"],
-        "dependencies": []
+        "dependencies": DEPENDENCIES
     }
 
     with open(file_path, 'rb') as mod_file:
@@ -102,7 +120,8 @@ def upload_curseforge(loader: str, version: str, file_path: str):
         "gameVersions": game_version_ids + [modloader_id],
         "releaseType": "release",
         "changelog": CHANGELOG,
-        "changelogType": "markdown"
+        "changelogType": "markdown",
+        "dependencies": DEPENDENCIES
     }
     metastr = json.dumps(metadata)
 
