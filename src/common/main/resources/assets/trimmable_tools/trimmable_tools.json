@@ -75,7 +75,7 @@
     {
       "id": "minecraft:copper",
       "overrides": {
-        "copper_darker": [
+        "minecraft:copper_darker": [
           "minecraft:copper_sword",
           "minecraft:copper_pickaxe",
           "minecraft:copper_axe",
@@ -87,7 +87,7 @@
     {
       "id": "minecraft:diamond",
       "overrides": {
-        "diamond_darker": [
+        "minecraft:diamond_darker": [
           "minecraft:diamond_sword",
           "minecraft:diamond_pickaxe",
           "minecraft:diamond_axe",
@@ -100,7 +100,7 @@
     {
       "id": "minecraft:gold",
       "overrides": {
-        "gold_darker": [
+        "minecraft:gold_darker": [
           "minecraft:gold_sword",
           "minecraft:gold_pickaxe",
           "minecraft:gold_axe",
@@ -112,7 +112,7 @@
     {
       "id": "minecraft:iron",
       "overrides": {
-        "iron_darker": [
+        "minecraft:iron_darker": [
           "minecraft:iron_sword",
           "minecraft:iron_pickaxe",
           "minecraft:iron_axe",
@@ -125,7 +125,7 @@
     {
       "id": "minecraft:netherite",
       "overrides": {
-        "netherite_darker": [
+        "minecraft:netherite_darker": [
           "minecraft:netherite_sword",
           "minecraft:netherite_pickaxe",
           "minecraft:netherite_axe",

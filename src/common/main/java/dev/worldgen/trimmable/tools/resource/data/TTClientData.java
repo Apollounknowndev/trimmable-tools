@@ -1,22 +1,36 @@
-package dev.worldgen.trimmable.tools.resource;
+package dev.worldgen.trimmable.tools.resource.data;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.worldgen.trimmable.tools.TrimmableToolsHelper;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ExtraCodecs;
 
 import java.util.*;
 
-public record TrimmableToolData(Map<Identifier, List<Identifier>> toolTypes, List<PatternData> patterns, List<MaterialData> materials) {
-    public static final TrimmableToolData EMPTY = new TrimmableToolData(Map.of(), List.of(), List.of());
+public record TTClientData(Map<Identifier, List<Identifier>> toolTypes, List<PatternData> patterns, List<MaterialData> materials) {
+    public static final TTClientData EMPTY = new TTClientData(Map.of(), List.of(), List.of());
     private static final Codec<List<Identifier>> ID_LIST_CODEC = ExtraCodecs.compactListCodec(Identifier.CODEC);
-    public static final Codec<TrimmableToolData> CODEC = RecordCodecBuilder.create(i -> i.group(
-        Codec.unboundedMap(Identifier.CODEC, ID_LIST_CODEC).optionalFieldOf("tool_types", Map.of()).forGetter(TrimmableToolData::toolTypes),
-        PatternData.CODEC.listOf().optionalFieldOf("patterns", List.of()).forGetter(TrimmableToolData::patterns),
-        MaterialData.CODEC.listOf().optionalFieldOf("materials", List.of()).forGetter(TrimmableToolData::materials)
-    ).apply(i, TrimmableToolData::new));
+    public static final Codec<TTClientData> CODEC = RecordCodecBuilder.create(i -> i.group(
+        Codec.unboundedMap(Identifier.CODEC, ID_LIST_CODEC).optionalFieldOf("tool_types", Map.of()).forGetter(TTClientData::toolTypes),
+        PatternData.CODEC.listOf().optionalFieldOf("patterns", List.of()).forGetter(TTClientData::patterns),
+        MaterialData.CODEC.listOf().optionalFieldOf("materials", List.of()).forGetter(TTClientData::materials)
+    ).apply(i, TTClientData::new));
 
-    public static TrimmableToolData merge(TrimmableToolData a, TrimmableToolData b) {
+    public TTClientData(Map<Identifier, List<Identifier>> toolTypes, List<PatternData> patterns, List<MaterialData> materials) {
+        this.toolTypes = toolTypes;
+        this.patterns = patterns.stream().filter(data -> data.requiredMod().map(TrimmableToolsHelper::isModLoaded).orElse(true)).toList();
+        this.materials = materials.stream().filter(data -> data.requiredMod().map(TrimmableToolsHelper::isModLoaded).orElse(true)).toList();
+    }
+
+    public Optional<Identifier> getToolType(Identifier id) {
+        for (var entry : this.toolTypes().entrySet()) {
+            if (entry.getValue().contains(id)) return Optional.of(entry.getKey());
+        }
+        return Optional.empty();
+    }
+
+    public static TTClientData merge(TTClientData a, TTClientData b) {
         Map<Identifier, List<Identifier>> toolTypes = new HashMap<>();
         for (var entry : a.toolTypes().entrySet()) {
             toolTypes.put(entry.getKey(), new ArrayList<>(entry.getValue()));
@@ -35,7 +49,7 @@ public record TrimmableToolData(Map<Identifier, List<Identifier>> toolTypes, Lis
         List<MaterialData> materials = new ArrayList<>(a.materials());
         materials.addAll(b.materials());
 
-        return new TrimmableToolData(toolTypes, patterns, materials);
+        return new TTClientData(toolTypes, patterns, materials);
     }
 
     public record PatternData(Identifier id, Optional<String> requiredMod) {
@@ -47,17 +61,21 @@ public record TrimmableToolData(Map<Identifier, List<Identifier>> toolTypes, Lis
         public static final Codec<PatternData> CODEC = Codec.withAlternative(SIMPLE_CODEC, EXPANDED_CODEC);
     }
 
-    public record MaterialData(Identifier id, Optional<Map<String, List<Identifier>>> overrides, Optional<String> requiredMod) {
+    public record MaterialData(Identifier id, Optional<Map<Identifier, List<Identifier>>> overrides, Optional<String> requiredMod) {
         private static final Codec<MaterialData> SIMPLE_CODEC = Identifier.CODEC.xmap(id -> new MaterialData(id, Optional.empty(), Optional.empty()), MaterialData::id);
         private static final Codec<MaterialData> EXPANDED_CODEC = RecordCodecBuilder.create(i -> i.group(
             Identifier.CODEC.fieldOf("id").forGetter(MaterialData::id),
-            Codec.unboundedMap(Codec.STRING, ID_LIST_CODEC).optionalFieldOf("overrides").forGetter(MaterialData::overrides),
+            Codec.unboundedMap(Identifier.CODEC, ID_LIST_CODEC).optionalFieldOf("overrides").forGetter(MaterialData::overrides),
             Codec.STRING.optionalFieldOf("required_mod").forGetter(MaterialData::requiredMod)
         ).apply(i, MaterialData::new));
         public static final Codec<MaterialData> CODEC = Codec.withAlternative(SIMPLE_CODEC, EXPANDED_CODEC);
 
-        public boolean idMatch(MaterialData other) {
-            return this.id().equals(other.id());
+        public Identifier getMaterial(Identifier itemId) {
+            if (this.overrides().isEmpty()) return this.id;
+            for (var entry : this.overrides().get().entrySet()) {
+                if (entry.getValue().contains(itemId)) return entry.getKey();
+            }
+            return this.id;
         }
     }
 }

@@ -17,25 +17,6 @@ public class TrimmableToolsHelperActual {
     }
 
     @Actual
-    public static List<Path> findPaths(String name) {
-        ArrayList<Path> paths = new ArrayList<>();
-        for (ModContainer mod : FabricLoader.getInstance().getAllMods()) {
-            mod.findPath(name).ifPresent(paths::add);
-        }
-        return paths;
-    }
-
-    @Actual
-    public static Map<String, Path> findFolders(String name) {
-        Map<String, Path> paths = new HashMap<>();
-        for (ModContainer mod : FabricLoader.getInstance().getAllMods()) {
-            String modId = mod.getMetadata().getId();
-            mod.findPath(name.formatted(modId)).ifPresent(path -> paths.put(modId, path));
-        }
-        return paths;
-    }
-
-    @Actual
     public static boolean isModLoaded(String modId) {
         return FabricLoader.getInstance().isModLoaded(modId);
     }

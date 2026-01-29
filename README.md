@@ -1,6 +1,6 @@
-# Abridged
+# Trimmable Tools
 
-**Abridged** is a Minecraft mod that adds naturally generating bridges to your world.
+**Trimmable Tools** is a mod and datapack that allows you to trim your tools!
 
 ---
 

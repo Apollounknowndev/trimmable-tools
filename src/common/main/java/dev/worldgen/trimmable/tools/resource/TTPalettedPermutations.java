@@ -3,14 +3,14 @@ package dev.worldgen.trimmable.tools.resource;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.platform.NativeImage;
-import com.mojang.serialization.JsonOps;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.MapCodec;
 import dev.worldgen.trimmable.tools.TrimmableTools;
 import dev.worldgen.trimmable.tools.TrimmableToolsHelper;
-import dev.worldgen.trimmable.tools.config.ConfigHandler;
+import dev.worldgen.trimmable.tools.resource.data.TTClientData;
+import dev.worldgen.trimmable.tools.resource.data.TTClientDataManager;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -26,56 +26,40 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.ARGB;
-import net.minecraft.util.LenientJsonParser;
 import org.jspecify.annotations.Nullable;
 
 @Environment(value=EnvType.CLIENT)
 public record TTPalettedPermutations() implements SpriteSource {
     public static final MapCodec<TTPalettedPermutations> MAP_CODEC = MapCodec.unit(new TTPalettedPermutations());
     public static final Identifier PALETTE_KEY = Identifier.withDefaultNamespace("trims/color_palettes/trim_palette");
+    public static final String PALETTE_PREFIX = "trims/color_palettes/";
     public static final String DEFAULT_SEPARATOR = "_";
 
     @Override
     public void run(ResourceManager manager, SpriteSource.Output output) {
-        // Collect, parse, and merge all trimmable tool data
-        TrimmableToolData data = TrimmableToolData.EMPTY;
-        for (String namespace : manager.getNamespaces()) {
-            var resource = manager.getResource(TrimmableTools.id(namespace, "trimmable_tools.json"));
-            if (resource.isEmpty()) continue;
-
-            try {
-                BufferedReader reader = resource.get().openAsReader();
-                var dataResult = TrimmableToolData.CODEC.parse(JsonOps.INSTANCE, LenientJsonParser.parse(reader));
-                if (dataResult.isSuccess()) {
-                    data = TrimmableToolData.merge(data, dataResult.getOrThrow());
-                } else {
-                    throw new IllegalStateException(dataResult.error().orElseThrow().message());
-                }
-            } catch (Exception e) {
-                TrimmableTools.LOGGER.warn("Couldn't parse trimmable tools data from {} namespace: {}", namespace, e);
-            }
-        }
+        TTClientData data = TTClientDataManager.INSTANCE.getClientData();
 
         // Collect pattern textures
         List<Identifier> textures = new ArrayList<>();
-        for (Identifier toolType : data.toolTypes().keySet()) {
-            for (TrimmableToolData.PatternData pattern : data.patterns()) {
-                if (pattern.requiredMod().isEmpty() || TrimmableToolsHelper.isModLoaded(pattern.requiredMod().get())) {
-                    textures.add(toolType.withPrefix("trims/items/").withSuffix("/" + pattern.id().getPath()));
-                }
+        for (TTClientData.PatternData pattern : data.patterns()) {
+            for (Identifier toolType : data.toolTypes().keySet()) {
+                textures.add(TrimmableToolsHelper.getTrimPermutationId(toolType, pattern.id(), null));
             }
         }
 
         // Collect material permutations
         Map<String, Identifier> permutations = new HashMap<>();
-        for (TrimmableToolData.MaterialData material : data.materials()) {
+        for (TTClientData.MaterialData material : data.materials()) {
             String key = material.id().getPath();
-            Identifier entry = material.id().withPrefix("trims/color_palettes/");
+            Identifier entry = material.id().withPrefix(PALETTE_PREFIX);
 
             permutations.put(key, entry);
 
-            if (ConfigHandler.hasDarkerVariant(key)) {
-                permutations.put(key + "_darker", entry.withSuffix("_darker"));
+            if (material.overrides().isEmpty()) continue;
+
+            for (var override : material.overrides().get().entrySet()) {
+                Identifier overrideId = override.getKey();
+                permutations.put(overrideId.getPath(), overrideId.withPrefix(PALETTE_PREFIX));
             }
         }
 
@@ -93,7 +77,6 @@ public record TTPalettedPermutations() implements SpriteSource {
             LazyLoadedImage baseImage = new LazyLoadedImage(textureId, resource.get(), palettes.size());
             for (var entry : palettes.entrySet()) {
                 Identifier permutationLocation = textureLocation.withSuffix(DEFAULT_SEPARATOR + entry.getKey());
-                TrimmableTools.LOGGER.warn(permutationLocation.toString());
                 output.add(permutationLocation, new TTPalettedPermutations.PalettedSpriteSupplier(baseImage, entry.getValue(), permutationLocation));
             }
         }
@@ -160,7 +143,7 @@ public record TTPalettedPermutations() implements SpriteSource {
                 NativeImage image = this.baseImage.get().mappedCopy(this.palette.get());
                 return new SpriteContents(this.permutationLocation, new FrameSize(image.getWidth(), image.getHeight()), image);
             } catch (IOException | IllegalArgumentException e) {
-                TrimmableTools.LOGGER.error("unable to apply palette to {}", this.permutationLocation, e);
+                TrimmableTools.LOGGER.error("Unable to apply palette to {}", this.permutationLocation, e);
                 return null;
             } finally {
                 this.baseImage.release();

@@ -6,11 +6,9 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.*;
-import net.minecraft.client.resources.model.ResolvableModel;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.ItemOwner;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -29,7 +27,7 @@ public record TrimmedItemModel(Object2ObjectMap<ClientTrim, ItemModel> models) i
         public static final MapCodec<Unbaked> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Identifier.CODEC.fieldOf("item_name").forGetter(Unbaked::itemName),
             ItemModels.CODEC.fieldOf("fallback").forGetter(Unbaked::fallback)
-        ).apply(instance, TrimmableToolsResourceHelper::createItemModel));
+        ).apply(instance, TTModelHelper::createItemModel));
 
         public MapCodec<Unbaked> type() {
             return MAP_CODEC;

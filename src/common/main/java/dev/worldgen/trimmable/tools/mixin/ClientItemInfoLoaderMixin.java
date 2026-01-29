@@ -1,7 +1,8 @@
 package dev.worldgen.trimmable.tools.mixin;
 
-import dev.worldgen.trimmable.tools.config.ToolTags;
-import dev.worldgen.trimmable.tools.resource.TrimmableToolsResourceHelper;
+import dev.worldgen.trimmable.tools.resource.TTModelHelper;
+import dev.worldgen.trimmable.tools.resource.data.TTClientData;
+import dev.worldgen.trimmable.tools.resource.data.TTClientDataManager;
 import net.minecraft.client.renderer.item.ClientItem;
 import net.minecraft.client.resources.model.ClientItemInfoLoader;
 import net.minecraft.resources.Identifier;
@@ -14,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Mixin(ClientItemInfoLoader.LoadedClientInfos.class)
 public class ClientItemInfoLoaderMixin {
@@ -25,17 +27,19 @@ public class ClientItemInfoLoaderMixin {
         method = "<init>",
         at = @At("RETURN")
     )
-    private void injectModifiedItemModels(CallbackInfo ci) {
+    private void modifyClientItems(CallbackInfo ci) {
         Map<Identifier, ClientItem> modifiedContents = new HashMap<>(this.contents);
+        TTClientData data = TTClientDataManager.INSTANCE.getClientData();
 
         for (Map.Entry<Identifier, ClientItem> info : modifiedContents.entrySet()) {
             Identifier itemId = info.getKey();
-            if (ToolTags.getToolType(itemId).equals(ToolTags.UNKNOWN)) continue;
+            Optional<Identifier> toolType = data.getToolType(itemId);
+            if (toolType.isEmpty()) continue;
 
             modifiedContents.put(
                 itemId,
                 new ClientItem(
-                    TrimmableToolsResourceHelper.createItemModel(
+                    TTModelHelper.createItemModel(
                         itemId,
                         info.getValue().model()
                     ), ClientItem.Properties.DEFAULT

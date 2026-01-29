@@ -1,3 +1,5 @@
+rootProject.name = "trimmable-tools"
+
 pluginManagement {
     repositories {
         mavenCentral()
