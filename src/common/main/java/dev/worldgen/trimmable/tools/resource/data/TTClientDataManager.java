@@ -3,6 +3,7 @@ package dev.worldgen.trimmable.tools.resource.data;
 import com.mojang.serialization.JsonOps;
 import dev.worldgen.trimmable.tools.TrimmableTools;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.LenientJsonParser;
@@ -17,6 +18,9 @@ public class TTClientDataManager extends SimplePreparableReloadListener<TTClient
     private TTClientData clientData;
 
     private TTClientDataManager() {}
+    
+    public void prepareSharedState(PreparableReloadListener.SharedState var1) {
+    }
 
     @Override
     protected TTClientData prepare(ResourceManager manager, ProfilerFiller profiler) {

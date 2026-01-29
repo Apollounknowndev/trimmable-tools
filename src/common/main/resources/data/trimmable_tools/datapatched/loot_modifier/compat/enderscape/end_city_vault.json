@@ -1,0 +1,58 @@
+{
+  "fabric:load_conditions": {
+    "condition": "fabric:all_mods_loaded",
+    "values": [
+      "enderscape"
+    ]
+  },
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "enderscape"
+    }
+  ],
+  "type": "datapatched:apply_function",
+  "targets": "enderscape:end_city/vault",
+  "function": {
+    "function": "minecraft:filtered",
+    "item_filter": {
+      "items": [
+        "minecraft:diamond_sword",
+        "minecraft:diamond_pickaxe",
+        "minecraft:diamond_axe",
+        "minecraft:diamond_shovel",
+        "minecraft:diamond_hoe"
+      ]
+    },
+    "modifier": {
+      "function": "minecraft:set_components",
+      "components": {
+        "minecraft:trim": {
+          "material": "enderscape:nebulite",
+          "pattern": "enderscape:stasis"
+        }
+      },
+      "conditions": [
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.25
+        }
+      ]
+    },
+    "on_pass": {
+      "function": "minecraft:set_components",
+      "components": {
+        "minecraft:trim": {
+          "material": "enderscape:nebulite",
+          "pattern": "enderscape:stasis"
+        }
+      },
+      "conditions": [
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.25
+        }
+      ]
+    }
+  }
+}

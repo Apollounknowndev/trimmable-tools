@@ -41,12 +41,12 @@ cloche {
     }
 
     fabric("fabric:1.21.11") {
-
         loaderVersion = "0.18.2"
         minecraftVersion = "1.21.11"
 
         dependencies {
             fabricApi("0.141.1")
+            modRuntimeOnly("maven.modrinth:datapatched:2.1.0-fabric-1.21.11")
         }
 
         includedClient()
@@ -56,27 +56,23 @@ cloche {
         }
 
         metadata {
-            entrypoint("main") {
-                value = "dev.worldgen.trimmable.tools.fabric.TrimmableToolsFabric"
-            }
             entrypoint("client") {
                 value = "dev.worldgen.trimmable.tools.fabric.TrimmableToolsFabric"
             }
         }
     }
 
-    /*neoforge("neoforge:1.21.11") {
-        //dependsOn(shared1217)
-
-        loaderVersion = "21.11.3-beta"
+    neoforge("neoforge:1.21.11") {
+        loaderVersion = "21.11.12-beta"
         minecraftVersion = "1.21.11"
 
         dependencies {
+            modRuntimeOnly("maven.modrinth:datapatched:2.1.0-neoforge-1.21.11")
         }
 
         runs {
             client()
             server()
         }
-    }*/
+    }
 }

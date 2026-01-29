@@ -16,18 +16,7 @@ import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.functions.FunctionReference;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 
-public class TrimmableToolsFabric implements ModInitializer, ClientModInitializer {
-    private static final ResourceKey<LootItemFunction> TRIAL_CHAMBERS_EQUIPMENT = ResourceKey.create(Registries.ITEM_MODIFIER, TrimmableTools.id("trial_chambers_equipment"));
-
-    @Override
-    public void onInitialize() {
-        LootTableEvents.MODIFY.register(((key, tableBuilder, source, registries) -> {
-            if (BuiltInLootTables.EQUIPMENT_TRIAL_CHAMBER_MELEE.identifier().equals(key.identifier())) {
-                tableBuilder.apply(FunctionReference.functionReference(TRIAL_CHAMBERS_EQUIPMENT));
-            }
-        }));
-    }
-
+public class TrimmableToolsFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         TrimmableTools.removeLegacyConfig();

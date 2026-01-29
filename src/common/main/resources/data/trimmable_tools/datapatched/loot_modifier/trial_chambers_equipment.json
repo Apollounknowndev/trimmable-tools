@@ -1,0 +1,68 @@
+{
+  "type": "datapatched:apply_function",
+  "targets": "minecraft:equipment/trial_chamber_melee",
+  "function": {
+    "function": "minecraft:filtered",
+    "item_filter": {
+      "items": "#c:tools"
+    },
+    "modifier": {
+      "function": "minecraft:sequence",
+      "functions": [
+        {
+          "function": "minecraft:set_components",
+          "components": {
+            "minecraft:trim": {
+              "material": "minecraft:copper",
+              "pattern": "minecraft:bolt"
+            }
+          }
+        },
+        {
+          "function": "minecraft:set_components",
+          "components": {
+            "minecraft:trim": {
+              "material": "minecraft:copper",
+              "pattern": "minecraft:flow"
+            }
+          },
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.5
+            }
+          ]
+        }
+      ]
+    },
+    "on_pass": {
+      "function": "minecraft:sequence",
+      "functions": [
+        {
+          "function": "minecraft:set_components",
+          "components": {
+            "minecraft:trim": {
+              "material": "minecraft:copper",
+              "pattern": "minecraft:bolt"
+            }
+          }
+        },
+        {
+          "function": "minecraft:set_components",
+          "components": {
+            "minecraft:trim": {
+              "material": "minecraft:copper",
+              "pattern": "minecraft:flow"
+            }
+          },
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.5
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

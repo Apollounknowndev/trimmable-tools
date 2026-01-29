@@ -15,8 +15,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 import java.util.function.IntUnaryOperator;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.atlas.SpriteResourceLoader;
 import net.minecraft.client.renderer.texture.atlas.SpriteSource;
@@ -28,7 +26,6 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.ARGB;
 import org.jspecify.annotations.Nullable;
 
-@Environment(value=EnvType.CLIENT)
 public record TTPalettedPermutations() implements SpriteSource {
     public static final MapCodec<TTPalettedPermutations> MAP_CODEC = MapCodec.unit(new TTPalettedPermutations());
     public static final Identifier PALETTE_KEY = Identifier.withDefaultNamespace("trims/color_palettes/trim_palette");
@@ -135,7 +132,6 @@ public record TTPalettedPermutations() implements SpriteSource {
         return MAP_CODEC;
     }
 
-    @Environment(value=EnvType.CLIENT)
     private record PalettedSpriteSupplier(LazyLoadedImage baseImage, java.util.function.Supplier<IntUnaryOperator> palette, Identifier permutationLocation) implements SpriteSource.DiscardableLoader {
         @Override
         public @Nullable SpriteContents get(SpriteResourceLoader loader) {
