@@ -92,3 +92,25 @@ Trim materials in the recipes: **11** (`amethyst, copper, diamond, emerald, gold
 iron, lapis, netherite, quartz, redstone, resin`); the baked textures cover the
 **15** palette files (the extra ones are the `*_darker` variants used by vanilla
 armor trims).
+
+## Two more traps when the pack is merged server-side
+
+If the pack is not shipped as-is but **merged into a generated pack** (Nexo, ItemsAdder,
+`pack.zip` pipelines, anything that re-serialises JSON), two things break in practice and
+both are silent - the client just renders the affected item as a broken square:
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| A vanilla item (e.g. `filled_map`) turns into a square blob | Some third-party pack still ships a 1.21.x `assets/minecraft/items/<item>.json` with `{"type": "minecraft:map_color"}` tints. **26.3 removed the `map_color` tint type** - vanilla `filled_map.json` is now just `{"model":{"type":"minecraft:model","model":"minecraft:item/filled_map"}}` - so the whole item model fails to parse. | Drop `map_color` tints from overridden item definitions. |
+| Any custom item renders as a broken square | Merging tools re-serialise item model JSON and **strip the namespace from `type`** (`minecraft:select` -> `select`). 26.3 rejects unknown type ids, so the model is discarded. | Re-add `minecraft:` to every `type` value. |
+
+`tools/fix-itemmodels.py` fixes both in one pass over an extracted pack:
+
+```bash
+python3 tools/fix-itemmodels.py /path/to/extracted-pack          # apply
+python3 tools/fix-itemmodels.py /path/to/extracted-pack -n       # dry-run
+```
+
+It walks `assets/*/items/**/*.json`, namespaces every `type` value and removes
+`map_color` tints (2391 files / 13333 namespace fixes / 3 tints on the pack we ship).
+Run it **before** zipping/touching timestamps, so the pack hash stays stable.
